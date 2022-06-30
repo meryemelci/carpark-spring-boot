@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<title>Dashboard - SB Admin</title>
+<link href="css/styles.css" rel="stylesheet" />
+<link
+	href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css"
+	rel="stylesheet" crossorigin="anonymous" />
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"
+	crossorigin="anonymous">
+	
+</script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/jszip-3.1.3/pdfmake-0.1.27/dt-1.10.15/b-1.3.1/b-html5-1.3.1/b-print-1.3.1/r-2.1.1/rg-1.0.0/datatables.min.js"></script>
+</head>
+
+<body class="sb-nav-fixed">
+<div th:replace="fragments/components :: header"></div>
+		<div id="layoutSidenav_content">
+			<main style="margin-left:230px; margin-top:60px;">
+				<div class="container-fluid">
+					<h1 class="mt-4">Car Table</h1>
+					<ol class="breadcrumb mb-4">
+						<li class="breadcrumb-item active">Car Table</li>
+					</ol>
+
+					<div>
+						<br> <br> <a type="button"
+							class="btn btn-primary btn-md" href="/addcar">Add Car</a>
+					</div>
+					<br>
+
+					<!-- 					<div class="card mb-4"> -->
+					<!-- 						<div class="card-header"> 
+<!--  							<i class="fas fa-table mr-1"></i> Car Table 
+<!--  						</div> -->
+					<!-- 						<div class="card-body"> -->
+					<!-- 							<div class="table-responsive"> -->
+					<!-- 								<table class="table table-bordered" id="dataTable" width="100%" -->
+					<!-- 									cellspacing="0"> -->
+					<!-- 									<thead> -->
+					<!-- 										<tr> -->
+					<!-- 											<th>Car Model</th> -->
+					<!-- 											<th>Plate</th> -->
+					<!-- 											<th>Payment</th> -->
+					<!-- 											<th>Status</th> -->
+					<!-- 											<th>Entry Date</th> -->
+					<!-- 										</tr> -->
+					<!-- 									</thead> -->
+					<!-- 									<tbody> -->
+					<!-- 										<tr th:each="car : ${listcars}"> -->
+					<!-- 											<td th:text="${car.model}"></td> -->
+					<!-- 											<td th:text="${car.plate}"></td> -->
+					<!-- 											<td th:text="${car.payment}"></td> -->
+					<!-- 											<td th:text="${car.status}"></td> -->
+					<!-- 											<td th:text="${car.createdDate}"></td> -->
+					<!-- 										</tr> -->
+					<!-- 										</div> -->
+					<!-- 										</tr> -->
+					<!-- 									</tbody> -->
+					<!-- 								</table> -->
+					<!-- 							</div> -->
+					<!-- 						</div> -->
+					<!-- 					</div> -->
+
+
+
+					<div class="card mb-4">
+						<div class="card-header">
+							<i class="fas fa-table mr-1"></i> Car Table
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered dataTable"  id="dataTable" width="100%"
+									cellspacing="0">
+									<thead>
+										<tr>
+											<th>Car Model</th>
+											<th>Plate</th>
+											<th>Payment</th>
+											<th>Status</th>
+											<th>Entry Date</th>											
+										</tr>
+									</thead>
+									<tbody>
+
+									</tbody>
+								</table>
+								<ul class="pagination" >
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+			</main>
+			<footer class="py-4 bg-light mt-auto">
+				<div class="container-fluid">
+					<div
+						class="d-flex align-items-center justify-content-between small">
+						<div class="text-muted">Copyright &copy; Your Website 2020</div>
+						<div>
+							<a href="#">Privacy Policy</a> &middot; <a href="#">Terms
+								&amp; Conditions</a>
+						</div>
+					</div>
+				</div>
+			</footer>
+		</div>
+	</div>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+		crossorigin="anonymous">
+		
+	</script>
+	<script src="js/scripts.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+		crossorigin="anonymous"></script>
+	<script src="assets/demo/chart-area-demo.js"></script>
+	<script src="assets/demo/chart-bar-demo.js"></script>
+	<script
+		src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"
+		crossorigin="anonymous"></script>
+<!-- 	<script src="assets/demo/datatables-demo.js"></script> -->
+<!-- 	<script src="assets/demo/pagination.js"></script> -->
+<!-- 	<script src="assets/demo/yasin.js"></script></script> -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			
+		/*	
+			let totalPages = 1;
+			
+			function fetchNotes(startPage) {
+				//console.log('startPage: ' +startPage);
+				
+				 var table = $(".dataTable tbody");
+			    $.ajax({
+			        type : "GET",
+			        url : "http://localhost:8080/rest/list",
+			        data: { 
+			            page: startPage, 
+			            size: 10
+			        },
+			        success: function(response){
+			         table.empty();
+			          // add table rows
+			          $.each(response.content, (i, note) => {
+			            let noteRow = '<tr>' +
+			      	  						'<td>' + note.model + '</td>' +
+					                		'<td>' + note.plate + '</td>' +
+					                   '</tr>';
+			            table.append(noteRow);
+			          });
+
+			          if ($('ul.pagination li').length - 2 != response.totalPages){
+			          	  // build pagination list at the first time loading
+			        	  $('ul.pagination').empty();
+			              buildPagination(response);
+			          }
+			        },
+			        error : function(e) {
+			          alert("ERROR: ", e);
+			          console.log("ERROR: ", e);
+			        }
+			    });
+			}
+			
+			function buildPagination(response) {
+				totalPages = response.totalPages;
+
+				var pageNumber = response.pageable.pageNumber;
+				
+				var numLinks = 5;
+				
+				// print 'previous' link only if not on page one
+				var first = '';
+				var prev = '';
+				if (pageNumber > 0) {
+					if(pageNumber !== 0) {
+						first = '<li class="page-item"><a class="page-link">« First</a></li>';
+					}
+					prev = '<li class="page-item"><a class="page-link">‹ Prev</a></li>';
+				} else {
+					prev = ''; // on the page one, don't show 'previous' link
+					first = ''; // nor 'first page' link
+				}
+				
+				// print 'next' link only if not on the last page
+				var next = '';
+				var last = '';
+				if (pageNumber < totalPages) {
+					if(pageNumber !== totalPages - 1) {
+						next = '<li class="page-item"><a class="page-link">Next ›</a></li>';				
+						last = '<li class="page-item"><a class="page-link">Last »</a></li>';
+					}
+				} else {
+					next = ''; // on the last page, don't show 'next' link
+					last = ''; // nor 'last page' link
+				}
+				
+				var start = pageNumber - (pageNumber % numLinks) + 1;
+				var end = start + numLinks - 1;
+				end = Math.min(totalPages, end);
+				var pagingLink = '';
+				
+				for (var i = start; i <= end; i++) {
+					if (i == pageNumber + 1) {
+						pagingLink += '<li class="page-item active"><a class="page-link"> ' + i + ' </a></li>'; // no need to create a link to current page
+					} else {
+						pagingLink += '<li class="page-item"><a class="page-link"> ' + i + ' </a></li>';
+					}
+				}
+				
+				// return the page navigation link
+				pagingLink = first + prev + pagingLink + next + last;
+				
+				$("ul.pagination").append(pagingLink);
+			}
+			
+			$(document).on("click", "ul.pagination li a", function() {
+		        var data = $(this).attr('data');
+				let val = $(this).text();
+				console.log('val: ' + val);
+
+				// click on the NEXT tag
+				if(val.toUpperCase() === "« FIRST") {
+					let currentActive = $("li.active");
+					fetchNotes(0);
+					$("li.active").removeClass("active");
+			  		// add .active to next-pagination li
+			  		currentActive.next().addClass("active");
+				} else if(val.toUpperCase() === "LAST »") {
+					fetchNotes(totalPages - 1);
+					$("li.active").removeClass("active");
+			  		// add .active to next-pagination li
+			  		currentActive.next().addClass("active");
+				} else if(val.toUpperCase() === "NEXT ›") {
+			  		let activeValue = parseInt($("ul.pagination li.active").text());
+			  		if(activeValue < totalPages){
+			  			let currentActive = $("li.active");
+						startPage = activeValue;
+						fetchNotes(startPage);
+			  			// remove .active class for the old li tag
+			  			$("li.active").removeClass("active");
+			  			// add .active to next-pagination li
+			  			currentActive.next().addClass("active");
+			  		}
+			  	} else if(val.toUpperCase() === "‹ PREV") {
+			  		let activeValue = parseInt($("ul.pagination li.active").text());
+			  		if(activeValue > 1) {
+			  			// get the previous page
+						startPage = activeValue - 2;
+						fetchNotes(startPage);
+			  			let currentActive = $("li.active");
+			  			currentActive.removeClass("active");
+			  			// add .active to previous-pagination li
+			  			currentActive.prev().addClass("active");
+			  		}
+			  	} else {
+					startPage = parseInt(val - 1);
+					fetchNotes(startPage);
+			  		// add focus to the li tag
+			  		$("li.active").removeClass("active");
+			  		$(this).parent().addClass("active");
+					//$(this).addClass("active");
+			  	}
+		    });
+			
+			(function(){
+		    	// get first-page at initial time
+		    	fetchNotes(0);
+		    })();
+			
+			
+		*/	
+			
+			
+			
+	
+			 var table = $(".dataTable tbody");
+			 
+			    $.ajax({
+			        url: 'http://localhost:8080/rest/cars',
+			        method: "GET",
+			        xhrFields: {
+			            withCredentials: true
+			        },
+			        success: function (data) {
+			            table.empty();
+			            $.each(data, function (a, b) {
+			    			var model = "<td>" + b.model + "</td>";
+							var plate = "<td>" + b.plate + "</td>";
+							//var payment = "<td>" + b.payment + "</td>";
+							
+							var payment = "";
+							var paymentButton = "";
+							if(b.payment == true){
+								payment = '<td class="paymentPrint_'+b.id+'"><div class="btn btn-success testControl_'+b.id+'" checked >5 ₺ ödendi</div></td>';
+							//	paymentButton = "<button class='deneme' data-id='"+b.id+"'>Deneme</button>";
+							}else{
+								payment = '<td class="paymentPrint_'+b.id+'"><div class="btn btn-warning">Ödenmedi</div></td>';
+						//		paymentButton = '<button type="button" class="btn btn-primary btn-md paymentCheck" data-test="'+b.id+'" id="button5'+b.id+'"><i class="fa fa-dollar-sign"></i></button>' + "<button class='deneme' data-id='"+b.id+"'>Deneme</button>";
+							}
+							
+							var status = "";
+							if(b.status == true){
+								status = '<td><div class="custom-control custom-switch"><input type="checkbox" data-test="'+b.id+'" checked class="custom-control-input updateSwitch" id="customSwitch2'+b.id+'"><label class="custom-control-label" for="customSwitch2'+b.id+'"></label></div></td>';
+							}else{
+								status = '<td><div class="custom-control custom-switch"><input type="checkbox" data-test="'+b.id+'" class="custom-control-input updateSwitch" id="customSwitch2'+b.id+'"><label class="custom-control-label" for="customSwitch2'+b.id+'"></label></div></td>';
+							}
+							
+							
+							var process = "";
+							//process = '<td><div><button type="button" class="btn btn-primary btn-md deleteCar" data-test="'+b.id+'" id="button1'+b.id+'">Delete</button><button type="button" class="btn btn-primary btn-md updateCar" data-test="'+b.id+'" id="button2'+b.id+'">Update</button></div></td>';
+							
+							
+							process = '<td><div><a class="btn btn-warning" href="updateCar?id='+b.id+'" > <i class="fa fa-edit"></i> </a><button type="button" class="btn btn-danger btn-md deleteCar" data-test="'+b.id+'" id="button1'+b.id+'"><i class="fa fa-trash"></i></button>'+paymentButton+'<button type="button" class="btn btn-primary btn-md paymentCheck" data-test="'+b.id+'" id="button5'+b.id+'"><i class="fa fa-dollar-sign"></i></button><div></td>';
+							
+												
+							var createdDate = "";
+							if(b.createdDate == "" || b.createdDate == null){
+								createdDate = "<td>-</td>"
+							}else{
+								createdDate = "<td>" + new Date(b.createdDate).toLocaleDateString() + "</td>";
+							}
+							
+						
+							table.append("<tr id='data_"+b.id+"'>"+model+plate+payment+status+createdDate+"</tr>");
+						
+						
+						})
+
+					 //   sayfala();
+					    statusUpdate();		
+						paymentUpdate();
+						deleteCar();
+						paymentCheck();
+			 	//        $("#dataTable").DataTable({ "pagingType": "full_numbers"});
+			        }
+			    });
+		
+			
+		function sayfala(){
+			
+			
+			var toplamtr=$("#dataTable tr").length;
+			var sayfaVeriSayisi=5;
+			
+			$("#dataTable tr:gt("+sayfaVeriSayisi+")").hide();
+			
+			var sayfaSayisi=Math.round(toplamtr/sayfaVeriSayisi);						
+			for(var i=0;i<sayfaSayisi;i++){
+				
+				$("#sayfalama").append('<a class="liste" href="javascript:void(0)"><button class="btn btn-light btn-link">'+(i+1)+'</button></a>');
+				
+			}
+			
+			
+			$("#sayfalama a.liste:first").addClass("aktif");
+			
+			$("#sayfalama").prepend('<a href="#" class="previous">&laquo; Önceki</a>');
+			$("#sayfalama").after('<a href="#" class="next">Sonraki &raquo;</a>');
+			
+			$("#sayfalama a.liste").click(function(){
+				var indis=$(this).index()+1;
+				var gt=sayfaVeriSayisi*indis;
+				$("#sayfalama a.liste").removeClass("aktif");
+				$(this).addClass("aktif");
+			
+				$("#dataTable tr").hide();
+				
+				for(var j=gt-sayfaVeriSayisi;j<gt;j++){
+					
+					$("#dataTable tr:eq("+j+")").show();
+					
+			/*		$(".previous").click(function(){
+						$("#dataTable tr:eq("+(j-1)+")").show();
+					});
+					$(".next").click(function(){
+						$("#dataTable tr:eq("+(j+1)+")").show();
+					});   
+					 */
+				}
+				
+			});
+		}	    
+		
+		
+		
+		
+		
+	
+		/*		function sayfala(){
+		
+		var toplamtr=$("#dataTable tr").length;
+		var sayfaVeriSayisi=5;
+		
+		$("#dataTable tr:gt("+sayfaVeriSayisi+")").hide();
+		
+		var sayfaSayisi=Math.round(toplamtr/sayfaVeriSayisi);						
+		for(var i=0;i<sayfaSayisi;i++){
+			$("#sayfalama").append('<a href="javascript:void(0)"><button class="btn btn-light btn-link">'+(i+1)+'</button></a>');
+			
+		}
+		
+		$("#sayfalama a:first").addClass("aktif");
+		
+		$("#sayfalama a").click(function(){
+			var indis=$(this).index()+1;
+			var gt=sayfaVeriSayisi*indis;
+			$("#sayfalama a").removeClass("aktif");
+			$(this).addClass("aktif");
+			
+			$("#dataTable tr").hide();
+			
+			for(var j=gt-sayfaVeriSayisi;j<gt;j++){
+				
+				$("#dataTable tr:eq("+j+")").show();
+			}
+			
+		});
+	}	    
+	
+	*/
+			    
+			
+	/*
+	 var table = $(".display tbody");
+ 
+    $.ajax({
+        url: 'http://testwebsite/api/testtables',
+        method: "GET",
+        xhrFields: {
+            withCredentials: true
+        },
+        success: function (data) {
+            table.empty();
+            $.each(data, function (a, b) {
+                table.append("<tr><td>"+b.Campus+"</td>" +
+                    "<td>"+b.StudentName+"</td>"+
+                    "<td>" + b.StudentId + "</td>" +
+                    "<td>" + b.CourseId + "</td>" +
+                    "<td>" + b.CourseTitle + "</td>" +
+                    "<td>" + b.CreditEarned + "</td>" +
+                    "<td>" + b.DateEarned + "</td>" +
+                    "<td>" + b.Department + "</td>" +
+                    "<td>" + b.ConvertedDepartment + "</td>" +
+                    "<td>" + b.School + "</td>" +
+                    "<td>" + b.Teacher + "</td></tr>");
+            });
+ 
+            $(".display").DataTable();
+        }
+    });
+	
+	*/		
+			
+			
+			 
+	  	
+
+// 				  $.ajax({
+// 				        url: 'http://localhost:8080/rest/list',
+// 				        method: "GET",
+// 				        xhrFields: {
+// 				            withCredentials: true
+// 				        },
+// 				        success: function (data) {
+// 				            // loop data to console to verify it is
+// 				            // arriving to browser
+				             
+// 				            $.each(data, function(a, b) {
+// 				        console.log(b);
+// 				            });
+// 				        }
+// 				    });
+
+				  
+				  
+			 
+			    // this ajax function sends credentials required for authorization
+			    // and receives the data from the API.
+			 
+			     
+			  
+			     
+			
+		        
+			
+// 		 $('#dataTable').DataTable( {
+// 		        "pagingType": "full_numbers"
+// 		    } );
+		
+		/* 
+			$.ajax({
+				url: "http://localhost:8080/rest/list",
+				type: "GET",
+				success: function(data){
+					
+					
+					data.forEach(function(dataPrint,index){
+						var model = "<td>" + dataPrint.model + "</td>";
+						var plate = "<td>" + dataPrint.plate + "</td>";
+						//var payment = "<td>" + dataPrint.payment + "</td>";
+						
+						var payment = "";
+						var paymentButton = "";
+						if(dataPrint.payment == true){
+							payment = '<td class="paymentPrint_'+dataPrint.id+'"><div class="btn btn-success testControl_'+dataPrint.id+'" checked >5 ₺ ödendi</div></td>';
+						//	paymentButton = "<button class='deneme' data-id='"+dataPrint.id+"'>Deneme</button>";
+						}else{
+							payment = '<td class="paymentPrint_'+dataPrint.id+'"><div class="btn btn-warning">Ödenmedi</div></td>';
+					//		paymentButton = '<button type="button" class="btn btn-primary btn-md paymentCheck" data-test="'+dataPrint.id+'" id="button5'+dataPrint.id+'"><i class="fa fa-dollar-sign"></i></button>' + "<button class='deneme' data-id='"+dataPrint.id+"'>Deneme</button>";
+						}
+						
+						var status = "";
+						if(dataPrint.status == true){
+							status = '<td><div class="custom-control custom-switch"><input type="checkbox" data-test="'+dataPrint.id+'" checked class="custom-control-input updateSwitch" id="customSwitch2'+dataPrint.id+'"><label class="custom-control-label" for="customSwitch2'+dataPrint.id+'"></label></div></td>';
+						}else{
+							status = '<td><div class="custom-control custom-switch"><input type="checkbox" data-test="'+dataPrint.id+'" class="custom-control-input updateSwitch" id="customSwitch2'+dataPrint.id+'"><label class="custom-control-label" for="customSwitch2'+dataPrint.id+'"></label></div></td>';
+						}
+						
+						
+						var process = "";
+						//process = '<td><div><button type="button" class="btn btn-primary btn-md deleteCar" data-test="'+dataPrint.id+'" id="button1'+dataPrint.id+'">Delete</button><button type="button" class="btn btn-primary btn-md updateCar" data-test="'+dataPrint.id+'" id="button2'+dataPrint.id+'">Update</button></div></td>';
+						
+						
+						process = '<td><div><a class="btn btn-warning" href="updateCar?id='+dataPrint.id+'" > <i class="fa fa-edit"></i> </a><button type="button" class="btn btn-danger btn-md deleteCar" data-test="'+dataPrint.id+'" id="button1'+dataPrint.id+'"><i class="fa fa-trash"></i></button>'+paymentButton+'<button type="button" class="btn btn-primary btn-md paymentCheck" data-test="'+dataPrint.id+'" id="button5'+dataPrint.id+'"><i class="fa fa-dollar-sign"></i></button><div></td>';
+						
+											
+						var createdDate = "";
+						if(dataPrint.createdDate == "" || dataPrint.createdDate == null){
+							createdDate = "<td>-</td>"
+						}else{
+							createdDate = "<td>" + new Date(dataPrint.createdDate).toLocaleDateString() + "</td>";
+						}
+						
+					
+					
+						$(".printCars").append("<tr id='data_"+dataPrint.id+"'>"+model+plate+payment+status+createdDate+process+"</tr>");
+					})
+
+					statusUpdate();		
+					paymentUpdate();
+					deleteCar();
+					paymentCheck();
+					
+
+				}
+			})
+			*/
+			
+			
+			function statusUpdate(){
+
+				$(".updateSwitch").click( function () {		
+				 	
+					
+					var HOST_URL = "http://localhost:8080";
+	                var id = $(this).attr("data-test");	 
+				 	
+	                $.ajax({
+	                    url: HOST_URL + "/rest/updateCarStatus/"+id,
+	                    type: "PUT",
+	                    success:function(data) {
+	                    	alert("İşlem Başarılı")
+                    	}
+                    });
+	                
+				 })
+			}
+			
+			function paymentUpdate(){
+
+				$(".updatePayment").click( function () {		
+				 	
+					
+					var HOST_URL = "http://localhost:8080";
+	                var id = $(this).attr("data-test");	 
+				 	
+	                $.ajax({
+	                    url: HOST_URL + "/rest/updateCarPayment/"+id,
+	                    type: "PUT",
+	                    success:function(data) {
+	                    	alert("İşlem Başarılı")
+                    	}
+                    });
+	                
+				 })
+			}
+			
+			
+			function deleteCar(){
+
+				$(".deleteCar").click( function () {		
+				 	
+					
+					var HOST_URL = "http://localhost:8080";
+	                var id = $(this).attr("data-test");	 
+				 	
+	                $.ajax({
+	                    url: HOST_URL + "/rest/delete/"+id,
+	                    type: "DELETE",
+	                    success:function(data) {
+	                    	$("#data_"+id).remove();
+	                    	                    	}
+                    });
+	                
+				 })
+			
+			}
+			
+	
+			
+			function paymentCheck(){
+
+				$(".paymentCheck").click( function () {		
+				 	
+					
+					var HOST_URL = "http://localhost:8080";
+	                var id = $(this).attr("data-test");	 
+	                
+	                
+	                if($(".testControl_"+id).hasClass("btn-success")){
+						
+	                	  const Toast = Swal.mixin({
+		                    		  toast: true,
+		                    		  position: 'top-end',
+		                    		  showConfirmButton: false,
+		                    		  timer: 3000,
+		                    		  timerProgressBar: true,
+		                    		  didOpen: (toast) => {
+		                    		    toast.addEventListener('mouseenter', Swal.stopTimer)
+		                    		    toast.addEventListener('mouseleave', Swal.resumeTimer)
+		                    		  }
+		                    		})
+
+		                    		Toast.fire({
+		                    		  icon: 'success',
+		                    		  title: 'Zaten ödendi'
+		                    		})
+
+	 	               }
+	 	               else{
+		                
+	 	            	  $.ajax({
+	 		                    url: HOST_URL + "/rest/updateCarPayment/"+id,
+	 		                    type: "PUT",
+	 		                    success:function(data) {
+	 		                    	
+	 		                    	const Toast = Swal.mixin({
+	 		                    		  toast: true,
+	 		                    		  position: 'top-end',
+	 		                    		  showConfirmButton: false,
+	 		                    		  timer: 3000,
+	 		                    		  timerProgressBar: true,
+	 		                    		  didOpen: (toast) => {
+	 		                    		    toast.addEventListener('mouseenter', Swal.stopTimer)
+	 		                    		    toast.addEventListener('mouseleave', Swal.resumeTimer)
+	 		                    		  }
+	 		                    		})
+
+	 		                    		Toast.fire({
+	 		                    		  icon: 'success',
+	 		                    		  title: 'Ödeme başarıyla gerçekleşti'
+	 		                    		})
+	 	                    	}
+	 	                    }); }
+				 })
+			}
+
+			
+			
+			
+			/*
+			
+			function paymentCheck(){
+
+				$(".paymentCheck").click( function () {		
+				 	
+					
+					var HOST_URL = "http://localhost:8080";
+	                var id = $(this).attr("data-test");	 
+	                
+	                
+	                if($("#customSwitch2"+id).is(':checked')){
+
+	 	            	   const Toast = Swal.mixin({
+		                    		  toast: true,
+		                    		  position: 'top-end',
+		                    		  showConfirmButton: false,
+		                    		  timer: 3000,
+		                    		  timerProgressBar: true,
+		                    		  didOpen: (toast) => {
+		                    		    toast.addEventListener('mouseenter', Swal.stopTimer)
+		                    		    toast.addEventListener('mouseleave', Swal.resumeTimer)
+		                    		  }
+		                    		})
+
+		                    		Toast.fire({
+		                    		  icon: 'success',
+		                    		  title: 'Araba içerde'
+		                    		})
+
+	 	               }
+	 	               else{
+		                
+	 	            	  $.ajax({
+	 		                    url: HOST_URL + "/rest/updateCarStatus/"+id,
+	 		                    type: "PUT",
+	 		                    success:function(data) {
+	 		                    	
+	 		                    	const Toast = Swal.mixin({
+	 		                    		  toast: true,
+	 		                    		  position: 'top-end',
+	 		                    		  showConfirmButton: false,
+	 		                    		  timer: 3000,
+	 		                    		  timerProgressBar: true,
+	 		                    		  didOpen: (toast) => {
+	 		                    		    toast.addEventListener('mouseenter', Swal.stopTimer)
+	 		                    		    toast.addEventListener('mouseleave', Swal.resumeTimer)
+	 		                    		  }
+	 		                    		})
+
+	 		                    		Toast.fire({
+	 		                    		  icon: 'success',
+	 		                    		  title: 'Durum başarıyla güncellendi'
+	 		                    		})
+	 	                    	}
+	 	                    }); }
+				 })
+			}
+
+			*/
+			
+			
+			
+/*
+			function paymentCheck(){
+
+				$(".paymentCheck").click( function () {		
+				 	
+					
+					var HOST_URL = "http://localhost:8080";
+	                var id = $(this).attr("data-test");	 
+	                $.ajax({
+	                    url: HOST_URL + "/rest/updateCarPayment/"+id,
+	                    type: "PUT",
+	                    success:function(data) {
+	                    	
+	                    	const Toast = Swal.mixin({
+	                    		  toast: true,
+	                    		  position: 'top-end',
+	                    		  showConfirmButton: false,
+	                    		  timer: 3000,
+	                    		  timerProgressBar: true,
+	                    		  didOpen: (toast) => {
+	                    		    toast.addEventListener('mouseenter', Swal.stopTimer)
+	                    		    toast.addEventListener('mouseleave', Swal.resumeTimer)
+	                    		  }
+	                    		})
+
+	                    		Toast.fire({
+	                    		  icon: 'success',
+	                    		  title: 'Ödeme başarıyla yapıldı'
+	                    		})
+	                    	$(".paymentPrint_"+id).html('<div class="btn btn-success">5 ₺ ödendi</div>')
+                    	}
+                    });
+	                
+				 })
+			}
+			
+*/
+			
+			
+// 			function updateCar(){
+				
+// 				$(".updateCar").click( function () {
+					
+// 				var HOST_URL = "http://localhost:8080";
+//                 var id = $(this).attr("data-test");	 
+			 	
+//                 $.ajax({
+//                     url: HOST_URL + "rest/updateCar/"+id,
+//                     type: "GET",
+//                     success:function(data) {
+                   
+//                 	}
+//                 });
+                
+// 				});
+// 			}
+
+
+// 			function deneme(){
+//				$(".deneme").click( function () {		
+//					var id = $(this).attr("data-id");
+				
+//					var buton = $(".testControl_"+id).html();
+				
+//					if($(".testControl_"+id).hasClass("btn-success")){
+
+//						alert(buton + "  : "  + id)
+//					}
+//				})
+//			}
+			
+
+
+
+			})
+				
+		
+		
+		
+		
+	</script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<title>Add Car Page</title>
+<link href="css/styles.css" rel="stylesheet" />
+<link
+	href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css"
+	rel="stylesheet" crossorigin="anonymous" />
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"
+	crossorigin="anonymous">
+	
+</script>
+</head>
+<body class="sb-nav-fixed">
+	<div th:replace="fragments/components :: header"></div>
+		<div id="layoutSidenav_content">
+			<main style="margin-left:230px; margin-top:60px;">
+				<div class="container-fluid">
+					<h1 class="mt-4">Add Car</h1>
+					<ol class="breadcrumb mb-4">
+						<li class="breadcrumb-item active">Add Car</li>
+					</ol>
+					<div class="container-fluid">
+						<form th:action="@{addcar}" th:object="${cars}" method="post">
+							<table>
+								<tr>
+									<td>Model</td>
+									<td><input type="text" id="carmodel"
+										th:field="${cars.model}" placeholder="model"
+										class="form-control mb-4 col-20"></td>
+								</tr>
+								<tr>
+									<td>Plate</td>
+									<td><input type="text" id="carplate"
+										th:field="${cars.plate}" placeholder="plate"
+										class="form-control mb-4 col-20"></td>
+								</tr>
+								<tr>
+
+									<td>Payment</td>
+									<td>
+										<div class="custom-control custom-switch">
+											<input type="checkbox" class="custom-control-input"
+												id="customSwitch1" th:field="${cars.payment}">
+											<label class="custom-control-label" for="customSwitch1"></label>
+										</div>
+									</td>
+
+								</tr>
+								<br>
+								<br>
+								<tr>
+
+									<td>Status</td>
+									<td>
+										<div class="custom-control custom-switch">
+											<input type="checkbox" class="custom-control-input"
+												id="customSwitch2" th:field="${cars.status}">
+											<label class="custom-control-label" for="customSwitch2"></label>
+										</div>
+									</td>
+
+								</tr>
+								<br>
+
+
+								<tr>
+									<td colspan="2">
+										<div id="submit1" class="btn btn-info col-2-1">Save</div>
+									</td>
+								</tr>
+							</table>
+						</form>
+						<br>
+					</div>
+				</div>
+			</main>
+			<footer class="py-4 bg-light mt-auto">
+				<div class="container-fluid">
+					<div
+						class="d-flex align-items-center justify-content-between small">
+						<div class="text-muted">Copyright &copy; Your Website 2020</div>
+						<div>
+							<a href="#">Privacy Policy</a> &middot; <a href="#">Terms
+								&amp; Conditions</a>
+						</div>
+					</div>
+				</div>
+			</footer>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+		crossorigin="anonymous">
+		
+	</script>
+	<script src="js/scripts.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+		crossorigin="anonymous"></script>
+	<script src="assets/demo/chart-area-demo.js"></script>
+	<script src="assets/demo/chart-bar-demo.js"></script>
+	<script
+		src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"
+		crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="assets/demo/datatables-demo.js"></script>
+	<script type="text/javascript">
+	
+
+	$("#submit1").click(function() {
+		
+
+		var carmodel = $("#carmodel").val();
+		var carplate = $("#carplate").val();
+		var paymentStatus = ($("#customSwitch1").is(':checked')) ? true : false;
+		var status = ($("#customSwitch2").is(':checked')) ? true : false;
+		
+		//alert(carmodel + " --- " + carplate + " --- " + paymentStatus + " ---- " + status);
+		var param={
+    		"model": carmodel,
+    		"plate": carplate,
+    		"payment": paymentStatus,
+    		"status": status
+    	}
+    	var ser_data=JSON.stringify(param);
+		
+		$.ajax({
+        	url: "http://localhost:8080/rest/addcar",
+			type: "POST",
+            data: ser_data,
+		    contentType: "application/json",
+            success: function (result) {
+            	alert("İşlem Başarılı")
+            },
+            error: function () {
+                alert('Hata');
+            }
+        });
+		
+		
+	});
+	
+	
+	</script>
+</body>
+
+</html>
